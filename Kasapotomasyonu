@@ -1,0 +1,99 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+enum EtTuru {
+    KuzuEti,
+    DanaEti,
+    Tavuk,
+    Kanat,
+    Baget,
+    Incik,
+    Sucuk
+};
+
+struct Et {
+    EtTuru tur;
+    string isim;
+    double kilogramFiyati;
+
+    Et(const string& isim, double kilogramFiyati, EtTuru tur)
+        : isim(isim), kilogramFiyati(kilogramFiyati), tur(tur) {}
+};
+
+class KasapOtomasyonu {
+public:
+    KasapOtomasyonu() {
+        urunEkle("Kuzu Et", 350.0, KuzuEti);
+        urunEkle("Dana Et", 300.0, DanaEti);
+        urunEkle("Bütün Tavuk", 90.0, Tavuk);
+        urunEkle("Tavuk Kanat", 120.0, Kanat);
+        urunEkle("Tavuk Baget", 60.0, Baget);
+        urunEkle("Tavuk Incik", 80.0, Incik);
+        urunEkle("Sucuk", 200.0, Sucuk);
+    }
+
+    void urunEkle(const string& isim, double kilogramFiyati, EtTuru tur) {
+        Et yeniUrun(isim, kilogramFiyati, tur);
+        urunler.push_back(yeniUrun);
+    }
+
+    void menuGoster() {
+        cout << "\nMenu:" << endl;
+        cout << "\n1. Kuzu Et\n2. Dana Et\n3. Bütün Tavuk\n4. Tavuk Kanat\n5. Tavuk Baget\n6. Tavuk İncik\n7. Sucuk\n" << endl;
+    }
+
+    void urunSec() {
+        menuGoster();
+
+        double toplamFiyat = 0.0; // Toplam fiyatı tutacak değişken
+
+        char devam;
+        do {
+            int secim;
+            cout << "Lütfen bir ürün grubu seçiniz (1-7): ";
+            cin >> secim;
+
+            if (secim < 1 || secim > 7) {
+                cout << "Geçersiz seçim. Program sonlandırılıyor." << endl;
+                return;
+            }
+
+            const Et& secilenUrun = urunler[secim - 1];
+            double kilogram;
+            cout << "Kaç kilogram " << secilenUrun.isim << " almak istiyorsunuz? ";
+            cin >> kilogram;
+
+            double urunFiyati = kilogram * secilenUrun.kilogramFiyati;
+            toplamFiyat += urunFiyati;
+
+            cout << kilogram << " kg " << secilenUrun.isim << " alındı. Toplam fiyat: " << urunFiyati << " TL" << endl;
+
+            cout << "Başka bir alışveriş yapmak istiyor musunuz? (E/H): ";
+            cin >> devam;
+
+        } while (devam == 'E' || devam == 'e');
+        if (devam != 'e' && devam != 'E') {
+            cout << "Geçersiz seçim yaptınız." << endl;
+        }
+
+        cout << "Toplam ödenecek tutar: " << toplamFiyat << " TL" << endl;
+        cout << "Program sonlandırılıyor." << endl;
+    }
+
+private:
+    vector<Et> urunler;
+};
+
+int main() {
+    setlocale(LC_ALL, "Turkish");
+    cout << "|-----------------------|" << endl;
+    cout << "|      Hoşgeldiniz      |" << endl;
+    cout << "|-----------------------|" << endl;
+    KasapOtomasyonu kasap;
+    kasap.urunSec();
+
+    return 0;
+}
